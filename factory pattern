@@ -1,0 +1,32 @@
+提供创建对象的接口。
+
+你会建立一个专门生产Sample实例的工厂：
+public class Factory{
+    public static Sample creator(int which){
+        //getClass 产生Sample 一般可使用动态类装载装入类。
+        if (which==1)
+            return new SampleA();
+        else if (which==2)
+            return new SampleB();
+    }
+}
+那么在你的程序中，如果要实例化Sample时就使用
+    Sample sampleA=Factory.creator(1);
+
+
+这里假设：Sample有两个concrete类SampleA和SamleB，而Sample2也有两个concrete类Sample2A和SampleB2，那么，我们就将上例中Factory变成抽象类，将共同部分封装在抽象类中，不同部分使用子类实现，下面就是将上例中的Factory拓展成抽象工厂：
+public abstract class Factory{
+    public abstract Sample creator();
+    public abstract Sample2 creator(String name);
+}
+public class SimpleFactory extends Factory{
+    public Sample creator(){ ......... return new SampleA }
+    public Sample2 creator(String name){ ......... return new Sample2A }
+}
+public class BombFactory extends Factory{
+    public Sample creator(){ ...... return new SampleB }
+    public Sample2 creator(String name){ ...... return new Sample2B }
+}
+从上面看到两个工厂各自生产出一套Sample和Sample2，也许你会疑问，为什么我不可以使用两个工厂方法来分别生产Sample和Sample2？
+
+抽象工厂还有另外一个关键要点，是因为 SimpleFactory内，生产Sample和生产Sample2的方法之间有一定联系，所以才要将这两个方法捆绑在一个类中，这个工厂类有其本身特征，也许制造过程是统一的，比如：制造工艺比较简单，所以名称叫SimpleFactory。
