@@ -1,0 +1,64 @@
+Builder模式定义：将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示。
+
+首先假设一个复杂对象是由多个部件组成的，Builder模式是把复杂对象的创建和部件的创建分别开来，分别用Builder类和Director类来表示。
+
+首先,需要一个接口，它定义如何创建复杂对象的各个部件：
+public interface Builder {
+　//创建部件A　　比如创建汽车车轮
+　void buildPartA();
+　//创建部件B 比如创建汽车方向盘
+　void buildPartB();
+　//创建部件C 比如创建汽车发动机
+　void buildPartC();
+　//返回最后组装成品结果 (返回最后装配好的汽车)
+　//成品的组装过程不在这里进行,而是转移到下面的Director类中进行.
+　//从而实现了解耦过程和部件
+　Product getResult();
+}
+
+用Director构建最后的复杂对象，而在上面Builder接口中封装的是如何创建一个个部件(复杂对象是由这些部件组成的)，也就是说Director的内容是如何将部件最后组装成成品：
+public class Director {
+　private Builder builder;
+　public Director( Builder builder ) {
+　　this.builder = builder;
+　}
+　// 将部件partA partB partC最后组成复杂对象
+　//这里是将车轮 方向盘和发动机组装成汽车的过程
+　public void construct() {
+　　builder.buildPartA();
+　　builder.buildPartB();
+　　builder.buildPartC();
+　}
+}
+
+Builder的具体实现ConcreteBuilder：
+通过具体完成接口Builder来构建或装配产品的部件；
+定义并明确它所要创建的是什么具体东西；
+提供一个可以重新获取产品的接口。
+
+public class ConcreteBuilder implements Builder {
+　Part partA, partB, partC;
+　public void buildPartA() {
+　　//这里是具体如何构建partA的代码
+　};
+　public void buildPartB() {
+　　//这里是具体如何构建partB的代码
+　};
+　public void buildPartC() {
+　　//这里是具体如何构建partB的代码
+　};
+　public Product getResult() {
+　　//返回最后组装成品结果
+　};
+}
+
+复杂对象：产品Product：
+    public interface Product { }
+复杂对象的部件：
+    public interface Part { }
+
+我们看看如何调用Builder模式:
+ConcreteBuilder builder = new ConcreteBuilder(); // 内容是部件的具体生成
+Director director = new Director( builder ); // 内容是部件的组装（调用部件的具体生成，并指导部件组装过程）
+director.construct(); // 调用部件的具体生成，并指导部件组装过程
+Product product = builder.getResult(); // 返回最终的结果
