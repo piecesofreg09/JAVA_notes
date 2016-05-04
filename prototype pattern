@@ -1,0 +1,32 @@
+Prototype模式定义：用原型实例指定创建对象的种类，并且通过拷贝这些原型创建新的对象。
+
+因为Java中的提供clone()方法来实现对象的克隆，所以Prototype模式实现一下子变得很简单。以勺子为例：
+public abstract class AbstractSpoon implements Cloneable{
+　String spoonName;
+　public void setSpoonName(String spoonName) {this.spoonName = spoonName;}
+　public String getSpoonName() {return this.spoonName;}
+　public Object clone(){
+　　Object object = null;
+　　try {
+　　　object = super.clone();
+　　} catch (CloneNotSupportedException exception) {
+　　　System.err.println("AbstractSpoon is not Cloneable");
+　　}
+　　　return object;
+　}
+}
+有两个具体实现(ConcretePrototype)：
+public class SoupSpoon extends AbstractSpoon{
+　public SoupSpoon(){
+　　setSpoonName("Soup Spoon");
+　}
+}
+public class SaladSpoon extends AbstractSpoon{
+　public SaladSpoon(){
+　　setSpoonName("Salad Spoon");
+　}
+}
+
+调用Prototype模式很简单：
+AbstractSpoon spoon = new SoupSpoon();
+AbstractSpoon spoon = new SaladSpoon();
